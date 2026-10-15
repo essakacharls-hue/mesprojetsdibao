@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#123B63">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mes projets">
+<title>Mes projets</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sansation:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--plan:#123B63;--grid:rgba(127,166,204,.12);--sun:#F2B200;--sun-ink:#4A3600;--ink:#142430;--muted:#5F6B74;--rust:#C23B22;--font:'Sansation',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:var(--font);-webkit-tap-highlight-color:transparent}
+body{background-color:var(--plan);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;color:#fff;overflow:hidden}
+button,input{font-family:inherit;font-size:15px}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+
+/* Écran de démarrage : le dessin de l'icône, le nom, l'état de la connexion */
+.splash{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:24px 22px calc(24px + env(safe-area-inset-bottom));text-align:center}
+.splash[hidden]{display:none}
+.mark{width:132px;height:132px;display:block}
+.mark .b{animation:rise 1.4s ease-out both}
+.mark .b:nth-of-type(2){animation-delay:.15s}.mark .b:nth-of-type(3){animation-delay:.3s}
+@keyframes rise{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.mark .b{transform-origin:50% 100%;transform-box:fill-box}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+h1{margin:0;font-size:32px;letter-spacing:-.01em}
+.sub{margin:-8px 0 0;color:#BFD3E6;font-size:15px}
+.pill{display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:700}
+.pill.bad{background:var(--rust);border-color:var(--rust)}
+.card{background:#fff;color:var(--ink);border-radius:20px;padding:18px;width:100%;max-width:440px;text-align:left;box-shadow:0 14px 34px rgba(5,20,40,.35)}
+.card h2{margin:0 0 8px;font-size:19px}
+.card p{margin:0 0 12px;font-size:14.5px;line-height:1.5;color:#34485A}
+.card ol{margin:0 0 12px;padding-left:18px;font-size:14px;line-height:1.55;color:#34485A}
+.card label{display:block;font-size:13px;font-weight:700;color:var(--muted);margin-bottom:6px}
+.card input{width:100%;border:1px solid #CDD3CC;border-radius:12px;padding:12px 13px;margin-bottom:12px}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:0;border-radius:12px;padding:12px 18px;font-weight:700;cursor:pointer;background:var(--sun);color:var(--sun-ink)}
+.btn.g{background:#fff;color:var(--plan);border:1px solid #DDE1DC}
+.btn.big{font-size:17px;padding:14px 26px}
+.small{font-size:12.5px;color:#BFD3E6}
+.small a{color:#fff}
+
+/* L'appli, plein écran */
+#frame{position:fixed;inset:0;width:100%;height:100%;border:0;background:#E8EBE7;padding-top:env(safe-area-inset-top)}
+#frame[hidden]{display:none}
+.help{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:5;background:var(--sun);color:var(--sun-ink);border-radius:14px;padding:12px 14px;font-size:14px;display:flex;gap:10px;align-items:center;box-shadow:0 10px 26px rgba(0,0,0,.3)}
+.help[hidden]{display:none}
+.help span{flex:1}
+.help button{border:0;background:var(--plan);color:#fff;border-radius:10px;padding:9px 12px;font-weight:700;cursor:pointer;white-space:nowrap}
+</style>
+</head>
+<body>
+<section class="splash" id="splash">
+  <svg class="mark" viewBox="0 0 132 132" aria-hidden="true">
+    <line x1="10" y1="112" x2="122" y2="112" stroke="#9DBEDF" stroke-width="2"/>
+    <g class="b"><rect x="18" y="56" width="28" height="56" fill="#C5CED4"/><rect x="15" y="50" width="34" height="6" rx="2" fill="#B4472C"/><rect x="24" y="66" width="6" height="6" fill="#F2B200"/><rect x="34" y="66" width="6" height="6" fill="#F2B200"/><rect x="24" y="80" width="6" height="6" fill="#F2B200"/><rect x="34" y="80" width="6" height="6" fill="#F2B200"/><rect x="24" y="94" width="6" height="6" fill="#F2B200"/><rect x="34" y="94" width="6" height="6" fill="#F2B200"/></g>
+    <g class="b"><rect x="52" y="32" width="28" height="80" fill="#C5CED4"/><rect x="49" y="26" width="34" height="6" rx="2" fill="#F2B200"/><rect x="58" y="42" width="6" height="6" fill="#F2B200"/><rect x="68" y="42" width="6" height="6" fill="#F2B200"/><rect x="58" y="56" width="6" height="6" fill="#F2B200"/><rect x="68" y="56" width="6" height="6" fill="#F2B200"/><rect x="58" y="70" width="6" height="6" fill="#F2B200"/><rect x="68" y="70" width="6" height="6" fill="#F2B200"/><rect x="58" y="84" width="6" height="6" fill="#F2B200"/><rect x="68" y="84" width="6" height="6" fill="#F2B200"/></g>
+    <g class="b"><rect x="86" y="68" width="28" height="44" fill="#C5CED4"/><rect x="83" y="62" width="34" height="6" rx="2" fill="#0F7C7A"/><rect x="92" y="78" width="6" height="6" fill="#F2B200"/><rect x="102" y="78" width="6" height="6" fill="#F2B200"/><rect x="92" y="92" width="6" height="6" fill="#F2B200"/><rect x="102" y="92" width="6" height="6" fill="#F2B200"/></g>
+  </svg>
+  <h1>Mes projets</h1>
+  <p class="sub">Projets de la famille, plan de vie et finances</p>
+  <span class="pill" id="pill">⏳ Connexion au serveur…</span>
+  <div id="zone"></div>
+  <p class="small" id="foot"></p>
+</section>
+<iframe id="frame" title="Mes projets" hidden allow="clipboard-write"></iframe>
+<div class="help" id="help" hidden><span>L'appli ne s'affiche pas ici ?</span><button onclick="outside()">Ouvrir à part</button></div>
+
+<script>
+/* ============================================================
+   Lanceur de « Mes projets »
+   Il garde votre lien personnel (adresse /exec + clé) sur cet appareil,
+   vérifie que le serveur répond, puis ouvre l'appli en plein écran.
+   ============================================================ */
+const LS = { get(k){ try{return localStorage.getItem(k)}catch(e){return null} }, set(k,v){ try{localStorage.setItem(k,v)}catch(e){} }, del(k){ try{localStorage.removeItem(k)}catch(e){} } };
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* Lien reçu : ?k=…&api=… (menu « Liens d'installation ») ou ?u=<lien direct complet> */
+const CFG = (() => {
+  const q = new URLSearchParams(location.search);
+  let api = q.get('api') || LS.get('lp_api') || '', key = q.get('k') || LS.get('lp_key') || '';
+  const u = q.get('u'); if (u) { const p = parse(u); if (p.api) api = p.api; if (p.key) key = p.key; }
+  api = api.replace(/\?.*$/, '');
+  if (q.toString()) history.replaceState(null, '', location.pathname);   // la clé ne reste pas affichée
+  if (api && key && !/\/dev$/.test(api)) { LS.set('lp_api', api); LS.set('lp_key', key); }
+  return { api, key };
+})();
+function parse(link){
+  try { const u = new URL(link.trim()); return { api: u.searchParams.get('api') || (/\/exec$/.test(u.origin + u.pathname) ? u.origin + u.pathname : ''), key: u.searchParams.get('k') || '' }; }
+  catch(e) { return {}; }
+}
+const appUrl = () => CFG.api + '?k=' + encodeURIComponent(CFG.key);
+
+function pill(state){
+  const p = $('pill');
+  p.textContent = { wait: '⏳ Connexion au serveur…', ok: '🟢 Connecté', off: '📴 Pas de réseau', bad: '⚠️ Serveur injoignable' }[state];
+  p.classList.toggle('bad', state === 'off' || state === 'bad');
+}
+
+/* Vérifie le serveur (sans clé) : ?action=ping répond en JSON */
+async function ping(){
+  if (!navigator.onLine) return 'off';
+  const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 20000);
+  try {
+    const r = await fetch(CFG.api + '?action=ping', { cache: 'no-store', signal: ctl.signal });
+    const o = await r.json();
+    return o && o.ok ? 'ok' : 'bad';
+  } catch(e) { return navigator.onLine ? 'bad' : 'off'; }
+  finally { clearTimeout(to); }
+}
+
+async function start(){
+  $('frame').hidden = true; $('help').hidden = true; $('splash').hidden = false;
+  if (!CFG.api || !CFG.key || /\/dev$/.test(CFG.api)) return askLink();
+  pill('wait'); $('zone').innerHTML = '';
+  $('foot').innerHTML = '';
+  const st = await ping(); pill(st);
+  if (st === 'ok') return openApp();
+  $('zone').innerHTML = `<div class="card">
+    <h2>${st === 'off' ? '📴 Pas de réseau' : '⚠️ Le serveur ne répond pas'}</h2>
+    <p>${st === 'off' ? 'Activez les données mobiles ou le Wi-Fi, puis réessayez.' : 'Vos données sont en sécurité dans votre Google Sheet. Vérifiez :'}</p>
+    ${st === 'off' ? '' : `<ol><li>que l'adresse finit par <b>/exec</b> (jamais /dev) ;</li><li>que le déploiement est « Exécuter en tant que : Moi » et « Qui a accès : Tout le monde » ;</li><li>que le lien vient du menu du classeur « 📱 Mes projets › Liens d'installation ».</li></ol>`}
+    <div class="row"><button class="btn" onclick="start()">Réessayer</button><button class="btn g" onclick="openApp()">Ouvrir quand même</button><button class="btn g" onclick="askLink()">Changer de lien</button></div>
+  </div>`;
+}
+
+let helpTimer;
+function openApp(){
+  const f = $('frame');
+  f.src = appUrl(); f.hidden = false;
+  setTimeout(() => $('splash').hidden = true, 600);
+  clearTimeout(helpTimer); helpTimer = setTimeout(() => $('help').hidden = false, 12000);
+}
+$('frame').addEventListener('load', () => { if ($('frame').src) { clearTimeout(helpTimer); $('help').hidden = true; } });
+function outside(){ window.open(appUrl(), '_blank', 'noopener') || (location.href = appUrl()); }
+
+function askLink(msg){
+  $('frame').hidden = true; $('splash').hidden = false; pill(navigator.onLine ? 'wait' : 'off');
+  $('pill').textContent = '🔑 Lien personnel à coller';
+  $('zone').innerHTML = `<div class="card">
+    <h2>Votre lien personnel</h2>
+    <p>Dans le classeur Google : menu <b>📱 Mes projets › Liens d'installation</b>. Copiez <b>votre</b> lien (celui qui contient <code>k=</code>) et collez-le ici. Il reste sur cet appareil.</p>
+    ${msg ? `<p style="color:var(--rust);font-weight:700">${esc(msg)}</p>` : ''}
+    <label for="lnk">Lien</label><input id="lnk" placeholder="https://script.google.com/macros/s/…/exec?k=…" autocapitalize="off" autocomplete="off" inputmode="url">
+    <div class="row"><button class="btn big" onclick="saveLink()">Ouvrir Mes projets</button></div>
+  </div>`;
+  $('foot').textContent = '';
+}
+function saveLink(){
+  if (/\/dev(\?|$)/.test($('lnk').value.trim())) return askLink('Ce lien finit par /dev : prenez le lien /exec dans le menu du classeur.');
+  const p = parse($('lnk').value);
+  if (!p.api || !p.key) return askLink('Ce lien ne contient pas l\'adresse /exec et la clé k=. Reprenez-le dans le menu du classeur.');
+  if (/\/dev$/.test(p.api)) return askLink('Ce lien finit par /dev : prenez le lien /exec dans le menu du classeur.');
+  CFG.api = p.api; CFG.key = p.key; LS.set('lp_api', p.api); LS.set('lp_key', p.key);
+  start();
+}
+
+/* Installation */
+let promptEvt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); promptEvt = e;
+  if (!$('splash').hidden) $('foot').innerHTML = '<button class="btn" onclick="install()">Installer Mes projets sur cet appareil</button>';
+});
+function install(){ if (promptEvt) { promptEvt.prompt(); promptEvt.userChoice.finally(() => { promptEvt = null; $('foot').innerHTML = ''; }); } }
+if ('serviceWorker' in navigator && location.protocol === 'https:') navigator.serviceWorker.register('sw.js').catch(() => {});
+
+/* Retour sur l'appli après une coupure : on revérifie le serveur */
+window.addEventListener('online', () => { if (!$('splash').hidden) start(); });
+start();
+</script>
+</body>
+</html>

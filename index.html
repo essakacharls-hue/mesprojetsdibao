@@ -90,14 +90,23 @@ const CFG = (() => {
   const u = q.get('u'); if (u) { const p = parse(u); if (p.api) api = p.api; if (p.key) key = p.key; }
   api = api.replace(/\?.*$/, '');
   if (q.toString()) history.replaceState(null, '', location.pathname);   // la clé ne reste pas affichée
-  if (api && key && !/\/dev$/.test(api)) { LS.set('lp_api', api); LS.set('lp_key', key); }
-  return { api, key };
+  if (api && key && !/\/dev$/.test(api)) { LS.set('lp_api', api); if (LS.get('lp_key') !== key) LS.del('lp_tok'); LS.set('lp_key', key); }
+  return { api, key, tok: LS.get('lp_tok') || '' };
 })();
 function parse(link){
   try { const u = new URL(link.trim()); return { api: u.searchParams.get('api') || (/\/exec$/.test(u.origin + u.pathname) ? u.origin + u.pathname : ''), key: u.searchParams.get('k') || '' }; }
   catch(e) { return {}; }
 }
-const appUrl = () => CFG.api + '?k=' + encodeURIComponent(CFG.key);
+/* Le jeton d'appareil (code à 6 chiffres déjà saisi, valable 30 jours) est redonné à l'appli à chaque ouverture */
+const appUrl = () => CFG.api + '?k=' + encodeURIComponent(CFG.key) + (CFG.tok ? '&t=' + encodeURIComponent(CFG.tok) : '');
+window.addEventListener('message', e => {
+  let host = ''; try { host = new URL(e.origin).hostname; } catch(x) {}
+  if (!/(^|\.)googleusercontent\.com$|(^|\.)script\.google\.com$/.test(host)) return;   // seulement l'appli Google
+  const d = e.data || {};
+  if (d.type !== 'mp-token' || d.k !== CFG.key) return;
+  CFG.tok = String(d.t || '').replace(/[^0-9a-f.]/g, '');
+  if (CFG.tok) LS.set('lp_tok', CFG.tok); else LS.del('lp_tok');
+});
 
 function pill(state){
   const p = $('pill');
@@ -159,6 +168,7 @@ function saveLink(){
   const p = parse($('lnk').value);
   if (!p.api || !p.key) return askLink('Ce lien ne contient pas l\'adresse /exec et la clé k=. Reprenez-le dans le menu du classeur.');
   if (/\/dev$/.test(p.api)) return askLink('Ce lien finit par /dev : prenez le lien /exec dans le menu du classeur.');
+  if (CFG.key !== p.key) { CFG.tok = ''; LS.del('lp_tok'); }
   CFG.api = p.api; CFG.key = p.key; LS.set('lp_api', p.api); LS.set('lp_key', p.key);
   start();
 }
